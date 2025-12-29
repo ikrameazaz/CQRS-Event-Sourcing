@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/commands/accounts")
@@ -21,11 +22,12 @@ public class AccountCommandController {
         this.commandGateway = commandGateway;
     }
 @PostMapping("/add")
-    public String AddNewAccount(@RequestBody AddNewAcountRequestDto request) {
-        return commandGateway.send(new AddAccountCommand(
+    public CompletableFuture <String> AddNewAccount(@RequestBody AddNewAcountRequestDto request) {
+       CompletableFuture <String> response = commandGateway.send(new AddAccountCommand(
                 UUID.randomUUID().toString(),
                 request.initialBalance(),
                 request.currency()
         ));
+       return response;
     }
 }
